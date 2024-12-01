@@ -14,3 +14,13 @@
 #       methods: [:get, :post, :put, :patch, :delete, :options, :head]
 #   end
 # end
+
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins "*" # Update '*' with specific domains for security, e.g., 'http://localhost:3000'
+
+    resource "*",
+             headers: :any,
+             methods: [ :get, :post, :put, :patch, :delete, :options, :head ]
+  end
+end
