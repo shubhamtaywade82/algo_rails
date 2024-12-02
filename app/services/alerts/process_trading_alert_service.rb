@@ -6,8 +6,6 @@ class Alerts::ProcessTradingAlertService < ApplicationService
   def call
     return handle_position_change if position_changed?
 
-
-
     case @alert.action.downcase
     when "buy"
       process_buy_order

@@ -1,0 +1,11 @@
+{
+  "ticker": "{{ticker}}",
+  "close": "{{close}}",
+  "time": "{{time}}",
+  "volume": "{{volume}}",
+  "action": "{{strategy.order.action}}",
+  "market": "STOCK",
+  "exchange": "{{exchange}}",
+  "current_position": "{{strategy.market_position}}",
+  "previous_position": "{{strategy.prev_market_position}}"
+}
