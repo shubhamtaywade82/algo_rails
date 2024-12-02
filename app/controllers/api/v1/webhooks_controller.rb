@@ -6,6 +6,7 @@ module Api
           alert = Alert.create(alert_params.merge(status: "pending"))
 
           if alert.persisted?
+            Alerts::ProcessTradingAlertService.call(alert)
             render json: { message: "Alert processed successfully", alert: alert }, status: :ok
           else
             render json: { error: "Failed to save alert", details: alert.errors.full_messages }, status: :unprocessable_entity
