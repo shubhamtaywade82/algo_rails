@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_01_052037) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_01_073700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "alerts", force: :cascade do |t|
+    t.string "ticker"
+    t.decimal "close", precision: 15, scale: 2
+    t.datetime "time"
+    t.integer "volume"
+    t.string "action"
+    t.string "market"
+    t.string "exchange"
+    t.string "current_position"
+    t.string "previous_position"
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "instruments", force: :cascade do |t|
     t.integer "security_id", null: false

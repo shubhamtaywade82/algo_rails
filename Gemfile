@@ -33,6 +33,7 @@ gem "thruster", require: false
 gem "rack-cors"
 
 group :development, :test do
+  gem "dhanhq", path: "../dhanhq"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
@@ -43,7 +44,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
-gem "dhanhq"
+# gem "dhanhq"
 
 gem "dotenv-rails"
 

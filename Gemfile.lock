@@ -1,3 +1,10 @@
+PATH
+  remote: ../dhanhq
+  specs:
+    dhanhq (0.1.0)
+      faraday
+      websocket-client-simple
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -93,8 +100,6 @@ GEM
     debug (1.9.2)
       irb (~> 1.10)
       reline (>= 0.3.8)
-    dhanhq (0.1.0)
-      faraday
     dotenv (3.1.4)
     dotenv-rails (3.1.4)
       dotenv (= 3.1.4)
@@ -104,6 +109,7 @@ GEM
     erubi (1.13.0)
     et-orbi (1.2.11)
       tzinfo
+    event_emitter (0.2.6)
     faraday (2.12.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -300,6 +306,10 @@ GEM
     unicode-emoji (4.0.4)
     uri (1.0.2)
     useragent (0.16.10)
+    websocket (1.2.11)
+    websocket-client-simple (0.8.0)
+      event_emitter
+      websocket
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -320,7 +330,7 @@ DEPENDENCIES
   brakeman
   csv (~> 3.3)
   debug
-  dhanhq
+  dhanhq!
   dotenv-rails
   kamal
   pg (~> 1.1)
