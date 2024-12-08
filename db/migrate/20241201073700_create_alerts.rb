@@ -8,6 +8,7 @@ class CreateAlerts < ActiveRecord::Migration[8.0]
       t.string :action
       t.string :market
       t.string :exchange
+      t.string :error_message
       t.string :current_position
       t.string :previous_position
       t.string :status, default: "pending"

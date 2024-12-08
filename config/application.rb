@@ -40,5 +40,6 @@ module AlgoRailsApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.data_api_enabled = ENV.fetch("DATA_API_ENABLED", "false") == "true"
   end
 end

@@ -4,6 +4,7 @@ module Orders
     class BaseStrategy
       def initialize(alert)
         @alert = alert
+        
       end
 
       def execute

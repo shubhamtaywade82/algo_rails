@@ -3,7 +3,7 @@ module Api
     class WebhooksController < ApplicationController
       def tradingview
         if valid_alert?(alert_params)
-          alert = Alert.create(alert_params.merge(status: "pending"))
+          alert = Alert.create(alert_params.except(:trailing_stop_loss).merge(status: "pending"))
 
           if alert.persisted?
             Alerts::ProcessTradingAlertService.call(alert)
@@ -35,7 +35,8 @@ module Api
           :market,
           :exchange,
           :current_position,
-          :previous_position
+          :previous_position,
+          :trailing_stop_loss
         )
       end
     end

@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_01_073700) do
     t.string "action"
     t.string "market"
     t.string "exchange"
+    t.string "error_message"
     t.string "current_position"
     t.string "previous_position"
     t.string "status", default: "pending"

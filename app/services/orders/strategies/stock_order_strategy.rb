@@ -22,7 +22,7 @@ module Orders
           productType: Dhanhq::Constants::INTRA,
           orderType: Dhanhq::Constants::MARKET,
           validity: Dhanhq::Constants::DAY,
-          securityId: security_id,
+          securityId: security_id.to_s,
           quantity: quantity
         )
       end
@@ -33,7 +33,7 @@ module Orders
 
       def calculate_quantity(close_price)
         funds = Dhanhq::Api::Funds.fund_limit["availabelBalance"]
-        max_utilization = funds * 0.1 # Utilize 10%
+        max_utilization = funds * 0.5 # Utilize 50%
         [ max_utilization / close_price, 1 ].max.to_i
       end
     end
