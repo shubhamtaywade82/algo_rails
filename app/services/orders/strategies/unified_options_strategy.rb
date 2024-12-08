@@ -1,18 +1,29 @@
-# app/services/orders/strategies/index_order_strategy.rb
 module Orders
   module Strategies
-    class IndexOrderStrategy < BaseStrategy
+    class UnifiedOptionsStrategy < BaseStrategy
       ITM_OFFSET = -1
       ATM_OFFSET = 0
 
       def execute
+        case alert[:market].downcase
+        when "index"
+          process_index_alert
+        when "option"
+          process_option_alert
+        else
+          raise "Unsupported market type: #{alert[:market]}"
+        end
+      end
+
+      private
+
+      # Process alert for index-based trading
+      def process_index_alert
         direction = alert[:action].downcase
         option_type = direction == "buy" ? "CE" : "PE"
 
         strike_price = calculate_strike_price(alert[:close], offset: ATM_OFFSET)
         quantity = calculate_quantity(strike_price)
-
-        debugger
 
         place_option_order(
           strike_price: strike_price,
@@ -22,14 +33,28 @@ module Orders
         )
       end
 
-      private
+      # Process alert for direct option trading
+      def process_option_alert
+        direction = alert[:action].downcase
 
+        Dhanhq::Api::Orders.place_order(
+          security_id: fetch_security_id(alert[:ticker]),
+          exchange_segment: Dhanhq::Constants::NSE_FNO,
+          transaction_type: direction.upcase,
+          order_type: Dhanhq::Constants::MARKET,
+          product_type: Dhanhq::Constants::INTRA,
+          quantity: calculate_quantity
+        )
+      end
+
+      # Calculate strike price for index alerts
       def calculate_strike_price(close_price, offset:)
         step = 50 # NIFTY options have 50-point intervals
         base_strike = (close_price / step).round * step
         base_strike + (offset * step)
       end
 
+      # Calculate the quantity for index-based orders
       def calculate_quantity(strike_price)
         funds = Dhanhq::Api::Funds.fund_limit["availabelBalance"]
         max_utilization = funds * 0.3
@@ -37,6 +62,7 @@ module Orders
         [ max_utilization / (strike_price * lot_size), 1 ].max.to_i
       end
 
+      # Fetch instrument for index-based orders
       def place_option_order(strike_price:, option_type:, direction:, quantity:)
         instrument = fetch_instrument(strike_price, option_type)
 
@@ -52,6 +78,12 @@ module Orders
         )
       end
 
+      # Fetch security ID for options alerts
+      def fetch_security_id(ticker)
+        Instrument.find_by(symbol_name: ticker)&.security_id
+      end
+
+      # Fetch instrument for index-based trading
       def fetch_instrument(strike_price, option_type)
         expiry_type = determine_expiry_type(alert[:expiry_flag])
 
@@ -68,7 +100,7 @@ module Orders
         instrument
       end
 
-      # Determine if the expiry is weekly or monthly
+      # Determine expiry type (weekly/monthly)
       def determine_expiry_type(expiry_flag)
         case expiry_flag&.upcase
         when "W"

@@ -24,8 +24,8 @@ module Alerts
 
     def determine_strategy
       case alert[:market].upcase
-      when "INDEX"
-        Orders::Strategies::IndexOrderStrategy.new(alert)
+      when "INDEX", "OPTION"
+        Orders::Strategies::UnifiedOptionsStrategy.new(alert)
       when "STOCK"
         Orders::Strategies::StockOrderStrategy.new(alert)
       else
