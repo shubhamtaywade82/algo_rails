@@ -10,18 +10,12 @@ class TrailingStopLossService < ApplicationService
   def call
     monitor_price
   end
-
   private
 
   def monitor_price
     loop do
       current_price = fetch_market_price
-
-      if current_price.nil?
-        Rails.logger.warn("Market price unavailable. Skipping stop-loss update for Order #{@order_id}.")
-        sleep(60) # Wait longer if market price is unavailable
-        next
-      end
+      break if current_price.nil?
 
       if should_update_stop_loss?(current_price)
         new_trigger_price = calculate_new_trigger_price(current_price)

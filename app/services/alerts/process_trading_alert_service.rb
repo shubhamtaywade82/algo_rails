@@ -34,12 +34,39 @@ module Alerts
     end
 
     def setup_trailing_stop_loss(order_response)
-      TrailingStopLossService.call(
-        order_id: order_response["orderId"],
-        security_id: order_response["securityId"],
-        transaction_type: order_response["transactionType"],
+      order_details = fetch_order_details(order_response["orderId"])
+
+      return unless order_details
+
+      TrailingStopLossService.new(
+        order_id: order_details["orderId"],
+        security_id: order_details["securityId"],
+        transaction_type: order_details["transactionType"],
         trailing_stop_loss_percentage: alert[:trailing_stop_loss]
-      )
+      ).call
+      # Rails.logger.debug("TrailingStopLossService arguments: #{{
+      #   order_id: order_response["orderId"],
+      #   security_id: order_response["securityId"],
+      #   transaction_type: order_response["transactionType"],
+      #   trailing_stop_loss_percentage: alert[:trailing_stop_loss]
+      # }}")
+
+      # TrailingStopLossService.new(
+      #   order_id: order_response["orderId"],
+      #   security_id: order_response["securityId"],
+      #   transaction_type: order_response["transactionType"],
+      #   trailing_stop_loss_percentage: alert[:trailing_stop_loss]
+      # ).call
+    end
+
+    def fetch_order_details(order_id)
+      response = Dhanhq::Api::Orders.get_order_by_id(order_id)
+      raise "Failed to fetch order details for order ID #{order_id}" unless response
+
+      response
+    rescue StandardError => e
+      Rails.logger.error("Error fetching order details: #{e.message}")
+      nil
     end
   end
 end

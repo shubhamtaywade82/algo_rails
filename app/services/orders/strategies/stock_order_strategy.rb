@@ -33,7 +33,7 @@ module Orders
 
       def calculate_quantity(close_price)
         funds = Dhanhq::Api::Funds.fund_limit["availabelBalance"]
-        max_utilization = funds * 0.2 # Utilize 20%
+        max_utilization = funds * 0.5 # Utilize 50%
         [ max_utilization / close_price, 1 ].max.to_i
       end
     end
